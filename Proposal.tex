@@ -27,6 +27,8 @@
 \usepackage{algpseudocode}
 \usepackage{subcaption}
 \usepackage{tikz}
+\usepackage{tabularx}
+\usepackage{adjustbox}
 \usepackage{pgfplots}
 % basic setting
 \renewcommand{\baselinestretch}{1.25}
@@ -143,6 +145,49 @@ On average, total waiting time decreased by \textbf{91\%}, with several stations
 \caption{Total user waiting time by station before and after optimization}
 \label{fig:wait_compare}
 \end{figure}
+\begin{table}[ht]
+    \centering
+    \caption{Comparison of User Waiting Time Before and After Optimization}
+    \label{tab:wait_comparison}
+    \small
+    \begin{adjustbox}{max width=\linewidth}
+    \begin{tabularx}{\linewidth}{@{} c *{9}{>{\centering\arraybackslash}X} @{}}
+    \toprule
+    \textbf{Stn} & \textbf{Bor} & \textbf{Ret} & \textbf{WB-T} & \textbf{WR-T} & \textbf{WB-O} & \textbf{WR-O} & \textbf{Tot-T} & \textbf{Tot-O} & \textbf{Imp. (\%)} \\
+    \midrule
+    A & 12 & 6 & 2.0 & 0.0 & 0.5 & 0.0 & 2.0 & 0.5 & 75.0 \\
+    B & 4 & 5 & 1.0 & 0.0 & 0.0 & 0.0 & 1.0 & 0.0 & 100.0 \\
+    C & 6 & 8 & 0.0 & 1.0 & 0.0 & 0.2 & 1.0 & 0.2 & 80.0 \\
+    D & 2 & 3 & 1.0 & 0.0 & 0.0 & 0.0 & 1.0 & 0.0 & 100.0 \\
+    E & 8 & 5 & 0.0 & 0.5 & 0.0 & 0.0 & 0.5 & 0.0 & 100.0 \\
+    \bottomrule
+    \end{tabularx}
+    \end{adjustbox}
+\end{table}
+\newpage
+\begin{table}[ht]
+    \centering
+    \caption{Explanation of Column Abbreviations in Table~\ref{tab:wait_comparison}}
+    \label{tab:col_explanation}
+    \small
+    \begin{tabularx}{\textwidth}{|c|X|}
+    \hline
+    \textbf{Abbreviation} & \textbf{Explanation} \\
+    \hline
+    Stn & Station identifier (e.g., A, B, C) \\
+    Bor & Forecasted bike borrow demand at the station \\
+    Ret & Forecasted bike return demand at the station \\
+    WB-T & Average user wait time to borrow a bike under the traditional strategy (in minutes) \\
+    WR-T & Average user wait time to return a bike under the traditional strategy (in minutes) \\
+    WB-O & Average user wait time to borrow a bike under the optimized strategy (in minutes) \\
+    WR-O & Average user wait time to return a bike under the optimized strategy (in minutes) \\
+    Tot-T & Total wait time under the traditional strategy (WB-T + WR-T) \\
+    Tot-O & Total wait time under the optimized strategy (WB-O + WR-O) \\
+    Imp. (\%) & Improvement in total waiting time, computed as: \\
+    & $\left( \text{Tot-T} - \text{Tot-O} \right) / \text{Tot-T} \times 100\%$ \\
+    \hline
+    \end{tabularx}
+\end{table}   
 
 This result supports policy recommendations such as:
 \begin{itemize}
