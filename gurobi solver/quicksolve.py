@@ -1,6 +1,6 @@
 from gurobipy import *
 import pandas as pd
-import sys, os
+import sys, os, time
 
 # === 全域參數設定 ===
 μ = 6        # 處理速率（輛/分鐘）
@@ -16,6 +16,7 @@ if not os.path.exists("results"):
     os.makedirs("results")
 
 # === 讀取資料 ===
+start_time = time.time()
 df = pd.read_csv(f"assets/gurobi_demand_table_{location}.csv")
 
 # 索引與對應關係
@@ -131,9 +132,19 @@ total_cost = m.ObjVal
 total_dispatch = sum(x[i, j, t].X for i in S for j in S if i != j for t in T)
 total_hide = sum(h_in[i, t].X for i in S for t in T)
 total_release = sum(h_out[i, t].X for i in S for t in T)
+end_time = time.time()
+
+with open(f"./results/gurobi_summary-{location}.txt", "w", encoding="utf-8") as f:
+    f.write("=== 結果總結 ===\n")
+    f.write(f"🎯 總成本 (Objective): {total_cost:.2f}\n")
+    f.write(f"🚚 總調度數量: {int(total_dispatch)}\n")
+    f.write(f"📦 總藏車數量: {int(total_hide)}\n")
+    f.write(f"🔓 總釋放數量: {int(total_release)}\n")
+    f.write(f"⏱️ 運行時間: {end_time - start_time:.2f} 秒\n")
 
 print("=== 結果總結 ===")
 print(f"🎯 總成本 (Objective): {total_cost:.2f}")
 print(f"🚚 總調度數量: {int(total_dispatch)}")
 print(f"📦 總藏車數量: {int(total_hide)}")
 print(f"🔓 總釋放數量: {int(total_release)}")
+print(f"⏱️ 運行時間: {end_time - start_time:.2f} 秒")
