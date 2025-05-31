@@ -1,6 +1,7 @@
 from gurobipy import *
 import pandas as pd
-import sys, os, time
+import time as time_time
+import sys, os
 
 # === 全域參數設定 ===
 μ = 6        # 處理速率（輛/分鐘）
@@ -16,7 +17,7 @@ if not os.path.exists("results"):
     os.makedirs("results")
 
 # === 讀取資料 ===
-start_time = time.time()
+start_time = time_time.time()
 df = pd.read_csv(f"assets/gurobi_demand_table_{location}.csv")
 
 # 索引與對應關係
@@ -132,7 +133,7 @@ total_cost = m.ObjVal
 total_dispatch = sum(x[i, j, t].X for i in S for j in S if i != j for t in T)
 total_hide = sum(h_in[i, t].X for i in S for t in T)
 total_release = sum(h_out[i, t].X for i in S for t in T)
-end_time = time.time()
+end_time = time_time.time()
 
 with open(f"./results/gurobi_summary-{location}.txt", "w", encoding="utf-8") as f:
     f.write("=== 結果總結 ===\n")
