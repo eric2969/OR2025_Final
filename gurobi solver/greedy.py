@@ -1,5 +1,5 @@
 import pandas as pd
-import sys, os
+import sys, os, time
 
 # === 全域參數 ===
 μ = 6        # 處理速率（輛/分鐘）
@@ -11,6 +11,7 @@ if not os.path.exists("results"):
     os.makedirs("results")
 
 # === 讀取資料 ===
+start_time = time.time()
 df = pd.read_csv(f"assets/gurobi_demand_table_{location}.csv")
 times = sorted(df["interval_time"].unique())
 stations = sorted(df["sno"].unique())
@@ -127,9 +128,19 @@ dispatch_cost = α * sum(r["quantity"] for r in dispatch_result)
 hide_cost = β * sum(r["hide"] + r["release"] for r in hide_result)
 total_cost = wait_cost + dispatch_cost + hide_cost
 
+end_time = time.time()
+
+with open(f"./results/greedy_summary-{location}.txt", "w", encoding='utf-8') as f:
+    f.write(f"⏱️ 借還車等待成本: {wait_cost:.2f}\n")
+    f.write(f"🚚 調度成本: {dispatch_cost:.2f}\n")
+    f.write(f"📦 藏車/釋放成本: {hide_cost:.2f}\n")
+    f.write(f"🎯 成本總和: {total_cost:.2f}\n")
+    f.write(f"🕒 執行時間: {end_time - start_time:.2f} 秒\n")
+
 # 顯示結果
 print("\n=== 成本明細（貪婪法） ===")
 print(f"⏱️ 借還車等待成本: {wait_cost:.2f}")
 print(f"🚚 調度成本: {dispatch_cost:.2f}")
 print(f"📦 藏車/釋放成本: {hide_cost:.2f}")
 print(f"🎯 成本總和: {total_cost:.2f}")
+print(f"🕒 執行時間: {end_time - start_time:.2f} 秒")
