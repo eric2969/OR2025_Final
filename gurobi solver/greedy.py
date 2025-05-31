@@ -1,13 +1,18 @@
 import pandas as pd
+import sys, time, os
 
 # === 全域參數 ===
 μ = 6        # 處理速率（輛/分鐘）
 L = 20       # 每台卡車最多載車數
 T_num = 30   # 卡車數
 max_dispatch = T_num * L
+location = sys.argv[1]
+formatted_time = time.strftime("%Y%m%d-%H%M%S", time.localtime())
+if not os.path.exists("results"):
+    os.makedirs("results")
 
 # === 讀取資料 ===
-df = pd.read_csv("gurobi_demand_table.csv")
+df = pd.read_csv(f"assets/gurobi_demand_table_{location}.csv")
 times = sorted(df["interval_time"].unique())
 stations = sorted(df["sno"].unique())
 sna_map = df.drop_duplicates("sno").set_index("sno")["sna"].to_dict()
@@ -94,9 +99,9 @@ for t in times:
             ))
 
 # === 輸出結果 ===
-pd.DataFrame(dispatch_result).to_csv("greedy_dispatch.csv", index=False)
-pd.DataFrame(hide_result).to_csv("greedy_hide.csv", index=False)
-print("✅ 貪婪演算法結果已輸出為 greedy_dispatch.csv 與 greedy_hide.csv")
+pd.DataFrame(dispatch_result).to_csv(f"./result/greedy_dispatch-{location}_{formatted_time}.csv", index=False)
+pd.DataFrame(hide_result).to_csv(f"./result/greedy_hide-{location}_{formatted_time}.csv", index=False)
+print("✅ 貪婪演算法結果已輸出為 CSV 檔案")
 
 # === 成本估算（基於貪婪法結果） ===
 μ = 6

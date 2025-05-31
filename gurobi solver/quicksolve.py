@@ -1,5 +1,6 @@
 from gurobipy import *
 import pandas as pd
+import sys, time, os
 
 # === 全域參數設定 ===
 μ = 6        # 處理速率（輛/分鐘）
@@ -9,9 +10,14 @@ L = 20       # 每輛卡車可載車數
 T_num = 30   # 卡車數
 max_visit = 3  # 每台卡車最多拜訪站點數
 K = T_num * L  # 每期最大調度數量
+location = sys.argv[1]
+limit_time = int(sys.argv[2]) if len(sys.argv) > 2 else 600  # 最大運行時間（秒）
+formatted_time = time.strftime("%Y%m%d-%H%M%S", time.localtime())
+if not os.path.exists("results"):
+    os.makedirs("results")
 
 # === 讀取資料 ===
-df = pd.read_csv("gurobi_demand_table_daan.csv")
+df = pd.read_csv(f"assets/gurobi_demand_table_{location}.csv")
 
 # 索引與對應關係
 times = sorted(df["interval_time"].unique())
@@ -33,7 +39,7 @@ max_hide_per_station = {i: int(0.4 * C[i]) for i in S}
 # === 模型建立 ===
 m = Model("YouBike_Multiperiod")
 m.setParam("OutputFlag", 0)
-m.setParam("TimeLimit", 600)   # 最多跑 10 分鐘
+m.setParam("TimeLimit", limit_time)   # 最多跑 30 分鐘
 m.setParam("MIPGap", 0.05)  # 允許 1% 誤差內解即可接受
 
 x = m.addVars(S, S, T, vtype=GRB.CONTINUOUS, name="x")
@@ -117,9 +123,9 @@ for t in T:
                 release=int(h_out[i, t].X)
             ))
 
-pd.DataFrame(dispatch_records).to_csv("dispatch_result.csv", index=False)
-pd.DataFrame(hide_records).to_csv("hide_result.csv", index=False)
-print("✅ 結果已輸出為 dispatch_result.csv 與 hide_result.csv")
+pd.DataFrame(dispatch_records).to_csv(f"gurobi_dispatch-{location}_{formatted_time}.csv", index=False)
+pd.DataFrame(hide_records).to_csv(f"gurobi_hide-{location}_{formatted_time}.csv", index=False)
+print("✅ 結果已輸出為 CSV 檔案")
 
 # === 統計與列印總結資訊 ===
 total_cost = m.ObjVal
