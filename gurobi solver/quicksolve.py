@@ -39,6 +39,7 @@ max_hide_per_station = {i: int(0.4 * C[i]) for i in S}
 
 # === 模型建立 ===
 m = Model("YouBike_Multiperiod")
+m.setParam('Threads', 14)  # 或你機器上的實體核心數
 m.setParam("OutputFlag", 0)
 m.setParam("TimeLimit", limit_time)   # 最多跑 30 分鐘
 m.setParam("MIPGap", 0.05)  # 允許 1% 誤差內解即可接受
