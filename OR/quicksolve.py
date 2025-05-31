@@ -3,15 +3,15 @@ import pandas as pd
 
 # === 全域參數設定 ===
 μ = 6        # 處理速率（輛/分鐘）
-α = 1.5      # 調度成本權重
-β = 0.08     # 藏車／釋放成本權重
+α = 1      # 調度成本權重
+β = 0.04     # 藏車／釋放成本權重
 L = 20       # 每輛卡車可載車數
 T_num = 30   # 卡車數
 max_visit = 3  # 每台卡車最多拜訪站點數
 K = T_num * L  # 每期最大調度數量
 
 # === 讀取資料 ===
-df = pd.read_csv("gurobi_demand_table_datong.csv")
+df = pd.read_csv("gurobi_demand_table_daan.csv")
 
 # 索引與對應關係
 times = sorted(df["interval_time"].unique())
@@ -33,9 +33,10 @@ max_hide_per_station = {i: int(0.4 * C[i]) for i in S}
 # === 模型建立 ===
 m = Model("YouBike_Multiperiod")
 m.setParam("OutputFlag", 0)
+m.setParam("TimeLimit", 600)   # 最多跑 10 分鐘
 m.setParam("MIPGap", 0.05)  # 允許 1% 誤差內解即可接受
 
-x = m.addVars(S, S, T, vtype=GRB.INTEGER, name="x")
+x = m.addVars(S, S, T, vtype=GRB.CONTINUOUS, name="x")
 v = m.addVars(S, S, T, vtype=GRB.BINARY, name="v")
 h_in = m.addVars(S, T, vtype=GRB.INTEGER, name="h_in")
 h_out = m.addVars(S, T, vtype=GRB.INTEGER, name="h_out")
@@ -116,9 +117,9 @@ for t in T:
                 release=int(h_out[i, t].X)
             ))
 
-pd.DataFrame(dispatch_records).to_csv("dispatch_result-datong.csv", index=False)
-pd.DataFrame(hide_records).to_csv("hide_result-datong.csv", index=False)
-print("✅ 結果已輸出為 dispatch_result-datong.csv 與 hide_result-datong.csv")
+pd.DataFrame(dispatch_records).to_csv("dispatch_result.csv", index=False)
+pd.DataFrame(hide_records).to_csv("hide_result.csv", index=False)
+print("✅ 結果已輸出為 dispatch_result.csv 與 hide_result.csv")
 
 # === 統計與列印總結資訊 ===
 total_cost = m.ObjVal
