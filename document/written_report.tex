@@ -188,15 +188,17 @@ We aim to minimize the total user waiting time and operational costs:
 
 \section{Heuristic Algorithms}
 
-The heuristic algorithm we applied to solve this problem is the Greedy algorithm.
-We apply Greedy algorithm as our heuristic algorithm because we believe that the most intuitive way is the most possible way to solve a problem. 
+The heuristic algorithm we applied to solve this problem is the Greedy algorithm. In each time period, we match stations with too many bikes to those with too few, filling up the largest gaps first based on current urgency.
+We apply the greedy algorithm as our heuristic algorithm because it is simple, fast, flexible, and we believe that the most intuitive way is the most possible way to solve a problem. 
 In this case, we consider the method of “moving bikes first”, which is to prioritize redistributing bikes from stations with a surplus to those with a shortage in a greedy manner — that is, always matching the current largest excess with the largest shortage.
+Although it is not optimal, it gives us a solid baseline and a great point of comparison with Gurobi later on.
 
 \section{Data Collection and Generation}
 
 The source of our data is real-time data from the Ministry of Transportation, and the data was collected continuously for one week.
 Data processing involves calculating demand based on the difference between successive data points, including both bike demand and dock demand.
 Finally, the demand is recorded in 48 time slots per day, with each slot representing a 30-minute interval.
+To estimate the demand, we looked at the number changed of available bikes and docks between each time point, which gives us borrowing and return activity. This gives us a detailed view of user behavior across time and space.
 
 \section{Performance Evaluation}
 
@@ -230,7 +232,24 @@ Finally, the demand is recorded in 48 time slots per day, with each slot represe
 
 \section{Conclusions}
 
-Abcde.
+\subsection*{Objective Cost}
+
+When it comes to the objective cost of our model, the cost of the greedy algorithm massively exceeds the gurobi model in DaTong District and is about three time more costly than the model.
+However, greedy algorithm only has a slightly larger objective cost in other 3 districts, showing no significant difference, which proves that our heuristic algorithm is quite good.
+
+\subsection*{Parameters}
+
+First, for moving operations, the greedy algorithm performs significanty more bike relocating, especially in Daan district, where it performs 30 times more moving operations. This may sometimes be ineffective and redundant.
+On the other hand, the greedy algorithm performs less hiding operations, and it doesn't release any bike from hiding at all.
+Finally, execution time is the biggest advantage of the heuristic algorithm. It can come up with the result instantly, while the gurobi model takes about 5 to 10 minutes to solve the model for each district. Statistically, the greedy algorithm saves over 99& of time.
+
+\subsection*{Other Findings}
+
+Taking the concept of marginal cost into consideration, the greedy algorithm performs significantly more moving operations. In other words, it becomes less effective when the cost of moving a bike increases.
+In contrast, since the heuristic greedy algorithm performs little hiding operations, no releasing operations, and using only very little time, it becomes more effective when the cost of hiding, releasing, or time cost increases.
+
+Lastly, we can also see some regional differences between districts. For example, the model performs a lot of hiding in Datong District, while there is a lot of moving and relocating in Daan District. We believe that it may result from different user habit in different places, and we can do some further studies about regional difference in the future.
+
 
 \vspace{0.5em}
 
