@@ -79,9 +79,6 @@ To alleviate such problems, the Taipei City Government has launched pilot progra
 
 In this study, we propose a quantitative optimization model that systematically integrates both inter-station redistribution and localized bike hiding operations. Unlike current rule-based strategies, our model incorporates both observed and estimated unobserved demand, explicitly considers operational constraints (such as total allowed redistributions and hiding limits), and minimizes total user waiting time and logistical costs. The model serves as a decision-support tool to improve system-wide efficiency and enhance user experience in Taipei’s YouBike system.
 
-
-
-
 \section{Problem Description}
 
 The core operational challenge in Taipei City's YouBike system lies in maintaining service quality under physical and logistical constraints. Long user waiting times—either for renting or returning bikes—primarily result from two key problems:
@@ -103,8 +100,6 @@ In practice, redistribution efforts are constrained by:
 Moreover, another complexity arises from unobserved demand—users who abandon their intended trip due to a lack of bikes or docks. This type of latent demand is not reflected in standard transaction data and must be statistically estimated from historical patterns.
 
 Given these challenges, we formulate an optimization model that balances user experience (in terms of minimized waiting time) with operational feasibility (under logistical constraints). The model integrates both inter-station bike redistribution and localized temporary storage decisions, aiming to improve system-wide efficiency.
-
-
 
 \section{Mathematical Model}
 
@@ -205,7 +200,33 @@ Finally, the demand is recorded in 48 time slots per day, with each slot represe
 
 \section{Performance Evaluation}
 
-Abcde.
+\begin{figure}[H]
+\centering
+\includegraphics[width=textwidth]{Zhongzheng.png}
+\caption{ZhongZheng District}
+\label{Figure 1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=textwidth]{Xinyi.png}
+\caption{XinYi District}
+\label{Figure 2}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=textwidth]{Datong.png}
+\caption{DaTong District}
+\label{Figure 3}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=textwidth]{Daan.png}
+\caption{DaAn District}
+\label{Figure 4}
+\end{figure}
 
 \section{Conclusions}
 
