@@ -184,13 +184,11 @@ We aim to minimize the total user waiting time and operational costs:
 \end{itemize}
 
 
-
-
 \section{Heuristic Algorithms}
 
 The heuristic algorithm we applied to solve this problem is the Greedy algorithm. In each time period, we match stations with too many bikes to those with too few, filling up the largest gaps first based on current urgency.
 We apply the greedy algorithm as our heuristic algorithm because it is simple, fast, flexible, and we believe that the most intuitive way is the most possible way to solve a problem. 
-In this case, we consider the method of “moving bikes first”, which is to prioritize redistributing bikes from stations with a surplus to those with a shortage in a greedy manner — that is, always matching the current largest excess with the largest shortage.
+In this case, we consider the method of “moving bikes first”, which is to prioritize redistributing bikes from stations with a surplus to those with a shortage in a greedy manner, which always matches the current largest excess with the largest shortage.
 Although it is not optimal, it gives us a solid baseline and a great point of comparison with Gurobi later on.
 
 \section{Data Collection and Generation}
@@ -200,36 +198,52 @@ Data processing involves calculating demand based on the difference between succ
 Finally, the demand is recorded in 48 time slots per day, with each slot representing a 30-minute interval.
 To estimate the demand, we looked at the number changed of available bikes and docks between each time point, which gives us borrowing and return activity. This gives us a detailed view of user behavior across time and space.
 
+\newpage
 \section{Performance Evaluation}
+
+After coming up with two different methods, the greedy algorithm and the Gurobi model, we compare how well they actually perform based on three main perspectives: user waiting time, dispatch efficiency, and hiding operations.
+Besides solution quality, we also care about how practical each method is, such as how long it takes to run and whether the solution looks reasonable.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=textwidth]{Zhongzheng.png}
-\caption{ZhongZheng District}
+\includegraphics{Zhongzheng.png}
+\caption{Zhongzheng District}
 \label{Figure 1}
 \end{figure}
 
+In Zhongzheng District, the total cost for greedy algorithm is about 44\% higher than Gurobi’s solution. The dispatch quantity has a even bigger gap, as greedy algorithm moves over five times more bikes than Gurobi. When it comes to hide quantity, the greedy algorithm also uses about 69\% more, which means less efficient local balancing. On the other hand, Gurobi includes some release operations, while Greedy doesn’t use this at all. Finally, execution time is where the greedy algorithm shines, as it’s about 99\% faster.
+
+\newpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=textwidth]{Xinyi.png}
-\caption{XinYi District}
+\includegraphics{Xinyi.png}
+\caption{Xinyi District}
 \label{Figure 2}
 \end{figure}
 
+The result in Xinyi District is consistent. The total cost using the greedy algorithm is about 77\% higher than Gurobi, which is a pretty big gap in overall efficiency. Its dispatch quantity is again five times more movement compared to Gurobi.
+Interestingly, the hide quantity is actually 31\% lower in Xinyi District, and it again doesn't perform release operation, suggesting it may have underused temporary storage. Last, greedy finishes nearly instantly, which about 99\% faster than Gurobi model on speed.
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=textwidth]{Datong.png}
-\caption{DaTong District}
+\includegraphics{Datong.png}
+\caption{Datong District}
 \label{Figure 3}
 \end{figure}
 
+Result in Datong District shows the biggest differences. First, the total cost of the greedy algorithm is more than three times than Gurobi, showing a 212\% inefficiency. The dispatch quantity is also 275\% higher, meaning a lot more unnecessary movement. Consistently, greedy algorithm seldom uses hiding, and it didn't do any releasing at all, barely engaging in storing or reusing bikes. Last but not least, the execution time of greedy method is near instant, while Gurobi takes about 10 minutes.
+
+\newpage
 \begin{figure}[H]
 \centering
-\includegraphics[width=textwidth]{Daan.png}
-\caption{DaAn District}
+\includegraphics{Daan.png}
+\caption{Daan District}
 \label{Figure 4}
 \end{figure}
 
+In Daan District, the gap between Gurobi and Greedy is extreme. The dispatch quantity under Greedy is over 30 times more. That means the system is overworked, possibly moving bikes around aimlessly. However, even with all these efforts, total cost of greedy algorithm still ends up 27\% higher. In other words, more movement did not lead to more efficiency. The hiding quantity of both methods are similar, with just a 2\% difference, but greedy algorithm again fails to perform any releasing at all. Finally, like all previous cases, the execution time of greedy is massively shorter, but it comes at the cost of missing balance.
+
+\newpage
 \section{Conclusions}
 
 \subsection*{Objective Cost}
