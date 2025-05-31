@@ -1,6 +1,6 @@
 from gurobipy import *
 import pandas as pd
-import sys, time, os
+import sys, os
 
 # === 全域參數設定 ===
 μ = 6        # 處理速率（輛/分鐘）
@@ -12,7 +12,6 @@ max_visit = 3  # 每台卡車最多拜訪站點數
 K = T_num * L  # 每期最大調度數量
 location = sys.argv[1]
 limit_time = int(sys.argv[2]) if len(sys.argv) > 2 else 600  # 最大運行時間（秒）
-formatted_time = time.strftime("%Y%m%d-%H%M%S", time.localtime())
 if not os.path.exists("results"):
     os.makedirs("results")
 
@@ -123,8 +122,8 @@ for t in T:
                 release=int(h_out[i, t].X)
             ))
 
-pd.DataFrame(dispatch_records).to_csv(f"gurobi_dispatch-{location}_{formatted_time}.csv", index=False)
-pd.DataFrame(hide_records).to_csv(f"gurobi_hide-{location}_{formatted_time}.csv", index=False)
+pd.DataFrame(dispatch_records).to_csv(f"./results/gurobi_dispatch-{location}.csv", index=False)
+pd.DataFrame(hide_records).to_csv(f"./results/gurobi_hide-{location}.csv", index=False)
 print("✅ 結果已輸出為 CSV 檔案")
 
 # === 統計與列印總結資訊 ===
