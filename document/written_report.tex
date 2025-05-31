@@ -193,11 +193,15 @@ We aim to minimize the total user waiting time and operational costs:
 
 \section{Heuristic Algorithms}
 
-Abcde.
+The heuristic algorithm we applied to solve this problem is the Greedy algorithm.
+We apply Greedy algorithm as our heuristic algorithm because we believe that the most intuitive way is the most possible way to solve a problem. 
+In this case, we consider the method of “moving bikes first”, which is to prioritize redistributing bikes from stations with a surplus to those with a shortage in a greedy manner — that is, always matching the current largest excess with the largest shortage.
 
 \section{Data Collection and Generation}
 
-Abcde.
+The source of our data is real-time data from the Ministry of Transportation, and the data was collected continuously for one week.
+Data processing involves calculating demand based on the difference between successive data points, including both bike demand and dock demand.
+Finally, the demand is recorded in 48 time slots per day, with each slot representing a 30-minute interval.
 
 \section{Performance Evaluation}
 
